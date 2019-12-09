@@ -1,19 +1,22 @@
 ﻿using System;
+using System.Threading;
 
 namespace AutonomníVozidlo
 {
-    public enum Weather {Slunecno = 1, Prsi, Snezi, Vychrice, Apokalypsa}
+    public enum Weather {Slunecno, Prsi, Snezi, Vychrice, Apokalypsa}
     class Program
     {
         static void Main(string[] args)
         {
-            
+            Meteo met = new Meteo();
             string cesta = "CCCCCCMMMCCCCCMMMCCCCCCTTCCCCCMMMCCCCCCTTCCCCCCCCCCTTCCCCCCC";
             Autonomvz auto = new Autonomvz(100, cesta);
             vypsat vyp = new vypsat();
             vyp.Sub(auto);
+            RC rc = new RC();
+            rc.Sub(auto);
             auto.Drive();
-           
+            
             
         }
 
@@ -38,7 +41,7 @@ namespace AutonomníVozidlo
                 Pozice = 0;
                 while (drive)
                 {
-                    if (Pozice == Cesta.Length - 1) { Stop(); Console.WriteLine("dojeli jsme  8=====D"); }
+                    if (Pozice == Cesta.Length - 1) {Console.WriteLine("dojebali jsme  8=====D"); Stop();  }
                     System.Threading.Thread.Sleep((int)((5m/CestovniRychlost)*1000m));
 
                     aktdruhces = Cesta.Substring(Pozice, 1);
@@ -61,6 +64,8 @@ namespace AutonomníVozidlo
             {
                 drive = false;
                 change(this,road);
+                //Thread.ResetAbort();
+                
             }
             int Pozice { get; set; }
             public decimal CestovniRychlost { get; set; }
@@ -78,7 +83,7 @@ namespace AutonomníVozidlo
 
         public class RC
         {
-            RC() { }
+            public RC() { }
             public void Sub(Autonomvz a)
             {
                 a.change += StateAdapt;
@@ -98,7 +103,23 @@ namespace AutonomníVozidlo
 
         public class Meteo
         {
+          public static Random ran = new Random();
+          public Thread pocasi = new Thread(new ThreadStart(Metoda));
+           public Meteo() { pocasi.Start(); }
 
+
+            public static void Metoda()
+            {
+                while (true)
+                {
+                    System.Threading.Thread.Sleep(ran.Next(3000, 5001));
+                    weather = (Weather)ran.Next(Enum.GetValues(typeof(Weather)).Length+1);
+                    Console.WriteLine(weather);
+                }
+            }
+
+            
+            public static Weather weather {get;set;}
         }
        
 
