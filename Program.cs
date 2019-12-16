@@ -16,7 +16,8 @@ namespace AutonomníVozidlo
             RC rc = new RC();
             rc.Sub(auto);
             auto.Drive();
-            
+           
+           
             
         }
 
@@ -95,34 +96,63 @@ namespace AutonomníVozidlo
                     case "C": a.Svetla = false; a.AktualniRychlost = a.CestovniRychlost; break;
                     case "T": a.Svetla = true; a.AktualniRychlost =0.8m* a.CestovniRychlost; break;
                     case "M": a.Svetla = false; a.AktualniRychlost = 0.5m * a.CestovniRychlost; break;
-
                 }
                 
             }
+
+
         }
+
+
+        //public class Meteo
+        //{
+        //    public static Random ran = new Random();
+        //    public Thread pocasi = new Thread(new ThreadStart(Metoda));
+
+        //    public delegate void Change(Meteo m, Pocasi p);
+        //    public event Change changep;
+        //    public static Pocasi p = new Pocasi();
+        //    public Meteo() { pocasi.Start(); }
+
+
+        //    public void Metoda()
+        //    {
+
+        //        while (true)
+        //        {
+        //            System.Threading.Thread.Sleep(ran.Next(3000, 5001));
+
+        //            p.Stav = (Weather)ran.Next(Enum.GetValues(typeof(Weather)).Length);
+
+        //            changep(this, p);
+
+        //            Console.WriteLine(p.Stav);
+        //        }
+        //    }
+
+        //    public void Stop()
+        //    {
+        //        pocasi.Abort();
+        //    }
+
+
+        //}
 
         public class Meteo
         {
-          public static Random ran = new Random();
-          public Thread pocasi = new Thread(new ThreadStart(Metoda));
-           public Meteo() { pocasi.Start(); }
-
-
-            public static void Metoda()
+            Timer t;
+            public delegate void Timdel();
+                public event Timdel Zmena;
+            public Meteo()
             {
-                while (true)
-                {
-                    System.Threading.Thread.Sleep(ran.Next(3000, 5001));
-                    weather = (Weather)ran.Next(Enum.GetValues(typeof(Weather)).Length+1);
-                    Console.WriteLine(weather);
-                }
+
             }
-
-            
-            public static Weather weather {get;set;}
         }
-       
 
+        public class Pocasi : EventArgs
+        {
+            public Weather Stav { get; set; }
+        }
 
 
         class vypsat
@@ -133,7 +163,7 @@ namespace AutonomníVozidlo
                 a.change += Vypsat;
             }
             public void Vypsat(Autonomvz a, Road r)
-            { Console.WriteLine(r.TypeOfRoad+" "+a.ID); }
+            { Console.WriteLine(r.TypeOfRoad + " " + a.ID + "Světla:{0}", a.Svetla); }
 
         }
     }
